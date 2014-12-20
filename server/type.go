@@ -31,18 +31,30 @@ type UpdateLoc struct {
 	Lng    float64 `json:"lng"`
 }
 
-type FriendList struct {
+type NearbyList struct {
+	Action   string  `json:"action"`
+	Lng      float64 `json:"lng"`
+	Lat      float64 `json:"lat"`
+	Distance float64 `json:"distance"`
+}
+
+type NearbyListResp struct {
+	Action string     `json:"action"`
+	List   []Stranger `json:"list"`
+}
+
+type StrangerList struct {
 	Action string `json:"action"`
 }
 
-type Friend struct {
-	ID       string `json:"friend_id"`
-	Nickname string `json:"nickname"`
+type Stranger struct {
+	Nickname string  `json:"nickname"`
+	Distance float64 `json:"distance"`
 }
 
 type FriendListResp struct {
-	Action string   `json:"action"`
-	List   []Friend `json:"list"`
+	Action string     `json:"action"`
+	List   []Stranger `json:"list"`
 }
 
 type Message struct {

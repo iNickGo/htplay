@@ -2,12 +2,15 @@ package main
 
 import "gopkg.in/mgo.v2/bson"
 
+type Loc struct {
+	Lng float64 `bson:"lng"`
+	Lat float64 `bson:"lat"`
+}
 type DBUser struct {
 	Id       bson.ObjectId `bson:"_id"`
 	Username string        `bson:"username"`
 	Password string        `bson:"password"`
-	Lng      float64       `bson:"lng"`
-	Lat      float64       `bson:"lat"`
+	Loc      Loc           `bson:"loc"`
 }
 
 const (

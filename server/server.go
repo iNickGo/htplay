@@ -25,7 +25,7 @@ type HANDLER func(req []byte, data interface{}) (interface{}, error)
 
 type Client struct {
 	Name    string
-	Friends map[string]*Friend
+	Friends map[string]*Stranger
 	Conn    *websocket.Conn
 }
 

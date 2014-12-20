@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
+	"github.com/kellydunn/golang-geo"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -21,22 +22,11 @@ const (
 
 	ID_UPDATE_LOC = "update_loc"
 
-	ID_FRIEND_LIST      = "friend_list"
-	ID_FRIEND_LIST_RESP = "friend_list_resp"
-	ID_MESSAGE          = "message"
-	ID_RECV_MESSAGE     = "recv_message"
+	ID_NEARBY_LIST      = "nearby_list"
+	ID_NEARBY_LIST_RESP = "nearby_list_resp"
 
-	ID_CREATE_GROUP     = "create_group"
-	ID_CREATE_GROUP_ACK = "create_group_ack"
-
-	ID_JOIN_GROUP      = "join_group"
-	ID_JOIN_GROUP_RESP = "join_group_resp"
-
-	ID_LIST_GROUP     = "list_group"
-	ID_LIST_GROUP_ACK = "list_group_ack"
-
-	ID_GROUP_CHAT      = "group_chat"
-	ID_RECV_GROUP_CHAT = "recv_group_chat"
+	ID_MESSAGE      = "message"
+	ID_RECV_MESSAGE = "recv_message"
 )
 
 const (
@@ -51,13 +41,64 @@ func (this *Server) InitServer() {
 	this.handlers = make(map[string]HANDLER)
 
 	this.handlers[ID_LOGIN] = this.login
-	this.handlers[ID_FRIEND_LIST] = this.friend_list
+	//	this.handlers[ID_FRIEND_LIST] = this.friend_list
+	this.handlers[ID_NEARBY_LIST] = this.nearbyList
 	this.handlers[ID_MESSAGE] = this.message
 	this.handlers[ID_REGISTER] = this.register
 
 	this.handlers[ID_UPDATE_LOC] = this.updateLoc
 
 	this.initMongo(DB_IP, DB_PORT, DB_NAME, DB_USER, DB_PWD)
+}
+
+func (this *Server) nearbyList(req []byte, data interface{}) (interface{}, error) {
+	cmd := &NearbyList{}
+	json.Unmarshal(req, cmd)
+
+	username := data.(string)
+
+	users := make([]DBUser, 0)
+
+	err := this.FindNearPeople(cmd.Lng, cmd.Lat, cmd.Distance, &users)
+	if err != nil {
+		log.Printf("err %v\n", err)
+		return EMPTY_RESP, err
+	}
+
+	//update user location
+	go func() {
+		user := &DBUser{}
+		err := this.GetUser(username, user)
+		if err != nil {
+			log.Printf("err %v\n", err)
+		}
+		user.Loc.Lat = cmd.Lat
+		user.Loc.Lng = cmd.Lng
+		err = this.UpdateUser(user)
+		if err != nil {
+			log.Printf("err %v\n", err)
+		}
+	}()
+
+	resp := &NearbyListResp{Action: ID_NEARBY_LIST_RESP}
+	resp.List = make([]Stranger, 0)
+	for _, v := range users {
+
+		if v.Username == username {
+			continue
+		}
+		user := Stranger{}
+		user.Nickname = v.Username
+
+		p := geo.NewPoint(cmd.Lat, cmd.Lng)
+		p2 := geo.NewPoint(v.Loc.Lat, v.Loc.Lng)
+		dist := p.GreatCircleDistance(p2)
+
+		user.Distance = dist
+		resp.List = append(resp.List, user)
+	}
+
+	return resp, nil
 }
 
 func (this *Server) updateLoc(req []byte, data interface{}) (interface{}, error) {
@@ -71,11 +112,14 @@ func (this *Server) updateLoc(req []byte, data interface{}) (interface{}, error)
 		return EMPTY_RESP, errors.New("user not found")
 	}
 
-	user.Lat = cmd.Lat
-	user.Lng = cmd.Lng
+	user.Loc.Lat = cmd.Lat
+	user.Loc.Lng = cmd.Lng
 
 	//todo err check
-	this.UpdateUser(user)
+	err = this.UpdateUser(user)
+	if err != nil {
+		log.Printf("err %v\n", err)
+	}
 
 	return EMPTY_RESP, nil
 }
@@ -130,7 +174,7 @@ func (this *Server) login(req []byte, data interface{}) (interface{}, error) {
 	}
 
 	client := &Client{Name: cmd.Username}
-	client.Friends = make(map[string]*Friend)
+	client.Friends = make(map[string]*Stranger)
 	client.Conn = data.(*websocket.Conn)
 
 	this.AddClient(client)
@@ -159,23 +203,4 @@ func (this *Server) message(req []byte, data interface{}) (interface{}, error) {
 	to.Conn.WriteMessage(websocket.TextMessage, resp)
 
 	return nil, nil
-}
-
-func (this *Server) friend_list(req []byte, data interface{}) (interface{}, error) {
-	cmd := &FriendList{}
-	json.Unmarshal(req, cmd)
-
-	resp := &FriendListResp{Action: ID_FRIEND_LIST_RESP}
-	resp.List = make([]Friend, 0)
-	//fake
-	for k, v := range this.clients {
-		log.Printf("%v %v\n", k, v.Name)
-		friend := Friend{}
-		//friend.ID = v.Name
-		friend.Nickname = v.Name
-
-		resp.List = append(resp.List, friend)
-	}
-
-	return resp, nil
 }
