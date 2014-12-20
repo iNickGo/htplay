@@ -16,6 +16,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		014B1C421A45E52100BE890B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B3E7A0819D48D00006071F7 /* Starscream.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9C3E35F19E48FF1009FC285;
+			remoteInfo = StarscreamOSX;
+		};
+		014B1C441A45E52100BE890B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B3E7A0819D48D00006071F7 /* Starscream.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D9C3E36919E48FF1009FC285;
+			remoteInfo = StarscreamOSXTests;
+		};
 		6B3E7A0D19D48D00006071F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6B3E7A0819D48D00006071F7 /* Starscream.xcodeproj */;
@@ -109,6 +123,8 @@
 			children = (
 				6B3E7A0E19D48D00006071F7 /* Starscream.framework */,
 				6B3E7A1019D48D00006071F7 /* StarscreamTests.xctest */,
+				014B1C431A45E52100BE890B /* StarscreamOSX.framework */,
+				014B1C451A45E52100BE890B /* StarscreamOSXTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,6 +189,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		014B1C431A45E52100BE890B /* StarscreamOSX.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = StarscreamOSX.framework;
+			remoteRef = 014B1C421A45E52100BE890B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		014B1C451A45E52100BE890B /* StarscreamOSXTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = StarscreamOSXTests.xctest;
+			remoteRef = 014B1C441A45E52100BE890B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		6B3E7A0E19D48D00006071F7 /* Starscream.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;

@@ -14,10 +14,24 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B61774631A455DD70054E0B5"
-               BuildableName = "E04Jiabon.app"
-               BlueprintName = "E04Jiabon"
-               ReferencedContainer = "container:E04Jiabon.xcodeproj">
+               BlueprintIdentifier = "2E4FEFDA19575BE100351305"
+               BuildableName = "SwiftyJSON.framework"
+               BlueprintName = "SwiftyJSON"
+               ReferencedContainer = "container:SwiftyJSON.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2E4FEFE519575BE100351305"
+               BuildableName = "SwiftyJSONTests.xctest"
+               BlueprintName = "SwiftyJSONTests"
+               ReferencedContainer = "container:SwiftyJSON.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,14 +42,24 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2E4FEFE519575BE100351305"
+               BuildableName = "SwiftyJSONTests.xctest"
+               BlueprintName = "SwiftyJSONTests"
+               ReferencedContainer = "container:SwiftyJSON.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B61774631A455DD70054E0B5"
-            BuildableName = "E04Jiabon.app"
-            BlueprintName = "E04Jiabon"
-            ReferencedContainer = "container:E04Jiabon.xcodeproj">
+            BlueprintIdentifier = "2E4FEFDA19575BE100351305"
+            BuildableName = "SwiftyJSON.framework"
+            BlueprintName = "SwiftyJSON"
+            ReferencedContainer = "container:SwiftyJSON.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -48,15 +72,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B61774631A455DD70054E0B5"
-            BuildableName = "E04Jiabon.app"
-            BlueprintName = "E04Jiabon"
-            ReferencedContainer = "container:E04Jiabon.xcodeproj">
+            BlueprintIdentifier = "2E4FEFDA19575BE100351305"
+            BuildableName = "SwiftyJSON.framework"
+            BlueprintName = "SwiftyJSON"
+            ReferencedContainer = "container:SwiftyJSON.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -66,21 +90,21 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B61774631A455DD70054E0B5"
-            BuildableName = "E04Jiabon.app"
-            BlueprintName = "E04Jiabon"
-            ReferencedContainer = "container:E04Jiabon.xcodeproj">
+            BlueprintIdentifier = "2E4FEFDA19575BE100351305"
+            BuildableName = "SwiftyJSON.framework"
+            BlueprintName = "SwiftyJSON"
+            ReferencedContainer = "container:SwiftyJSON.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

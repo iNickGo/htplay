@@ -8,13 +8,10 @@
 
 import UIKit
 
-import Starscream
 
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.36:8080", path: "/")!)
-    
+    let client : Client = Client()
     let APP_MESSAGE : String = "E04 甲奔拉！"
-
     
     @IBOutlet weak var myTabelView: UITableView!
     
@@ -30,6 +27,9 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.myTabelView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         myTabelView.delegate = self
         myTabelView.dataSource = self
+        
+        client.setInfo("nick", pwd: "1234")
+        client.connect()
     }
 
     override func didReceiveMemoryWarning() {
