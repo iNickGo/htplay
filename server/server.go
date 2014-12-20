@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"sync"
 
@@ -29,29 +30,123 @@ const (
 	ID_RECV_GROUP_CHAT = "recv_group_chat"
 )
 
-type HANDLER func(req []byte, data interface{}) (string, error)
+const (
+	STATUS_OK     = "OK"
+	STATUS_FAILED = "FAILED"
+	EMPTY_RESP    = ""
+)
+
+type HANDLER func(req []byte, data interface{}) (interface{}, error)
 
 type Client struct {
-	Name string
+	Name    string
+	Friends map[string]*Friend
+	Conn    *websocket.Conn
 }
 
-func (this *Server) login(req []byte, data interface{}) (string, error) {
+func (this *Server) GetClient(name string) *Client {
 
-	return "", nil
+	this.RLock()
+	defer this.RUnlock()
+
+	client := this.clients[name]
+	if client != nil {
+		return client
+	}
+
+	return nil
 }
 
-func (this *Server) friend_list(req []byte, data interface{}) (string, error) {
-	return "", nil
+func (this *Server) AddClient(client *Client) {
+	if client == nil {
+		return
+	}
+
+	defer log.Printf("add client name: %v\n", client.Name)
+	this.Lock()
+	defer this.Unlock()
+
+	this.clients[client.Name] = client
+}
+
+func (this *Server) login(req []byte, data interface{}) (interface{}, error) {
+	cmd := &Login{}
+	json.Unmarshal(req, cmd)
+
+	if len(cmd.Username) == 0 {
+		return EMPTY_RESP, errors.New("parameter error")
+
+	}
+
+	respCmd := &LoginResp{Action: ID_LOGIN_RESP}
+	respCmd.Status = STATUS_OK
+	respCmd.Username = cmd.Username
+
+	//todo: check login
+	client := &Client{Name: cmd.Username}
+	client.Friends = make(map[string]*Friend)
+	client.Conn = data.(*websocket.Conn)
+
+	this.AddClient(client)
+
+	resp := &LoginResp{Action: ID_LOGIN_RESP, Status: STATUS_OK}
+
+	return resp, nil
+}
+
+func (this *Server) message(req []byte, data interface{}) (interface{}, error) {
+	cmd := &Message{}
+	json.Unmarshal(req, cmd)
+
+	//cmd.To
+
+	to := this.GetClient(cmd.To)
+	if to == nil {
+		return nil, errors.New("to not found")
+	}
+
+	recvMsg := &RecvMessage{Action: ID_RECV_MESSAGE}
+	recvMsg.From = cmd.From
+	recvMsg.Message = cmd.Message
+
+	resp, _ := json.Marshal(recvMsg)
+	to.Conn.WriteMessage(websocket.TextMessage, resp)
+
+	return nil, nil
+}
+
+func (this *Server) friend_list(req []byte, data interface{}) (interface{}, error) {
+	cmd := &FriendList{}
+	json.Unmarshal(req, cmd)
+
+	resp := &FriendListResp{Action: ID_FRIEND_LIST_RESP}
+	resp.List = make([]Friend, 0)
+	//fake
+	for k, v := range this.clients {
+		log.Printf("%v %v\n", k, v.Name)
+		friend := Friend{}
+		//friend.ID = v.Name
+		friend.Nickname = v.Name
+
+		resp.List = append(resp.List, friend)
+	}
+
+	return resp, nil
 }
 
 type Server struct {
-	sync.Mutex
+	sync.RWMutex
 	clients  map[string]*Client
 	handlers map[string]HANDLER
 }
 
 type GeneralCmd struct {
 	Action string `json:"action"`
+}
+
+type GeneralResp struct {
+	Action string `json:"action"`
+	Status string `json:"status"`
 }
 
 func NewServer() *Server {
@@ -66,6 +161,8 @@ func (this *Server) InitServer() {
 	this.handlers = make(map[string]HANDLER)
 
 	this.handlers[ID_LOGIN] = this.login
+	this.handlers[ID_FRIEND_LIST] = this.friend_list
+	this.handlers[ID_MESSAGE] = this.message
 }
 
 func (this *Server) clientGo(conn *websocket.Conn) {
@@ -91,11 +188,24 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 			return
 		}
 
-		resp, err := handler(req, "")
+		resp, err := handler(req, conn)
 
-		log.Printf("resp: %v\n", resp)
+		showErr(err)
 		if err != nil {
-			conn.WriteMessage(websocket.TextMessage, []byte(resp))
+			genResp := &GeneralResp{Action: cmd.Action, Status: STATUS_FAILED}
+			errResp, _ := json.Marshal(genResp)
+			resp = string(errResp)
 		}
+
+		if resp != nil {
+			jsonResp, err := json.Marshal(resp)
+			if err == nil {
+				showErr(err)
+			}
+			log.Printf("resp: %v\n", string(jsonResp))
+			conn.WriteMessage(websocket.TextMessage, jsonResp)
+
+		}
+
 	}
 }

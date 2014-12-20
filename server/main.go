@@ -15,7 +15,7 @@ func main() {
 
 	g_server = NewServer()
 
-	http.HandleFunc("/ws", entry)
+	http.HandleFunc("/service", entry)
 	err := http.ListenAndServe(":8080", nil)
 
 	log.Printf("server listen error: %v\n", err)
@@ -37,10 +37,11 @@ func entry(resp http.ResponseWriter, req *http.Request) {
 	var err error
 	var clientConn *websocket.Conn
 	clientConn, err = upgrader.Upgrade(resp, req, nil)
+
 	if err != nil {
 		showErr(err)
 		return
-
 	}
+
 	g_server.clientGo(clientConn)
 }
