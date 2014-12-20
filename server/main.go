@@ -3,22 +3,36 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"runtime"
+	"syscall"
 
 	"github.com/gorilla/websocket"
 )
 
 var g_server *Server
 
+type Test struct {
+	Name string
+}
+
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	g_server = NewServer()
 
-	http.HandleFunc("/service", entry)
-	err := http.ListenAndServe(":8080", nil)
+	go func() {
+		http.HandleFunc("/service", entry)
+		err := http.ListenAndServe(":8080", nil)
 
-	log.Printf("server listen error: %v\n", err)
+		log.Printf("server listen error: %v\n", err)
+		os.Exit(0)
+	}()
+
+	exitSig := make(chan os.Signal)
+	signal.Notify(exitSig, os.Kill, os.Interrupt, syscall.SIGTERM)
+	<-exitSig
 }
 
 func showErr(err error) {

@@ -3,13 +3,19 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
+	"gopkg.in/mgo.v2"
 )
 
 const (
+	ID_REGISTER      = "register"
+	ID_REGISTER_RESP = "register_resp"
+
 	ID_LOGIN            = "login"
 	ID_LOGIN_RESP       = "login_resp"
 	ID_FRIEND_LIST      = "friend_list"
@@ -31,9 +37,19 @@ const (
 )
 
 const (
-	STATUS_OK     = "OK"
-	STATUS_FAILED = "FAILED"
-	EMPTY_RESP    = ""
+	STATUS_OK           = "OK"
+	STATUS_FAILED       = "Failed"
+	STATUS_UNAUTHORIZED = "UnAuthorized"
+	EMPTY_RESP          = ""
+)
+
+const (
+	DB_USER = "htplay"
+	DB_PWD  = "htplay1234"
+	DB_NAME = "htplay"
+	DB_MODE = 0
+	DB_IP   = "localhost"
+	DB_PORT = 27017
 )
 
 type HANDLER func(req []byte, data interface{}) (interface{}, error)
@@ -69,75 +85,13 @@ func (this *Server) AddClient(client *Client) {
 	this.clients[client.Name] = client
 }
 
-func (this *Server) login(req []byte, data interface{}) (interface{}, error) {
-	cmd := &Login{}
-	json.Unmarshal(req, cmd)
-
-	if len(cmd.Username) == 0 {
-		return EMPTY_RESP, errors.New("parameter error")
-
-	}
-
-	respCmd := &LoginResp{Action: ID_LOGIN_RESP}
-	respCmd.Status = STATUS_OK
-	respCmd.Username = cmd.Username
-
-	//todo: check login
-	client := &Client{Name: cmd.Username}
-	client.Friends = make(map[string]*Friend)
-	client.Conn = data.(*websocket.Conn)
-
-	this.AddClient(client)
-
-	resp := &LoginResp{Action: ID_LOGIN_RESP, Status: STATUS_OK}
-
-	return resp, nil
-}
-
-func (this *Server) message(req []byte, data interface{}) (interface{}, error) {
-	cmd := &Message{}
-	json.Unmarshal(req, cmd)
-
-	//cmd.To
-
-	to := this.GetClient(cmd.To)
-	if to == nil {
-		return nil, errors.New("to not found")
-	}
-
-	recvMsg := &RecvMessage{Action: ID_RECV_MESSAGE}
-	recvMsg.From = cmd.From
-	recvMsg.Message = cmd.Message
-
-	resp, _ := json.Marshal(recvMsg)
-	to.Conn.WriteMessage(websocket.TextMessage, resp)
-
-	return nil, nil
-}
-
-func (this *Server) friend_list(req []byte, data interface{}) (interface{}, error) {
-	cmd := &FriendList{}
-	json.Unmarshal(req, cmd)
-
-	resp := &FriendListResp{Action: ID_FRIEND_LIST_RESP}
-	resp.List = make([]Friend, 0)
-	//fake
-	for k, v := range this.clients {
-		log.Printf("%v %v\n", k, v.Name)
-		friend := Friend{}
-		//friend.ID = v.Name
-		friend.Nickname = v.Name
-
-		resp.List = append(resp.List, friend)
-	}
-
-	return resp, nil
-}
-
 type Server struct {
 	sync.RWMutex
 	clients  map[string]*Client
 	handlers map[string]HANDLER
+
+	session *mgo.Session
+	db      string
 }
 
 type GeneralCmd struct {
@@ -163,9 +117,44 @@ func (this *Server) InitServer() {
 	this.handlers[ID_LOGIN] = this.login
 	this.handlers[ID_FRIEND_LIST] = this.friend_list
 	this.handlers[ID_MESSAGE] = this.message
+	this.handlers[ID_REGISTER] = this.register
+
+	this.initMongo(DB_IP, DB_PORT, DB_NAME, DB_USER, DB_PWD)
+}
+
+func (this *Server) initMongo(ip string, port int, db string, username string, password string) (bool, error) {
+	var err error
+	info := &mgo.DialInfo{}
+	info.Addrs = append(info.Addrs, fmt.Sprintf("%s:%d", ip, port))
+	info.Database = db
+	info.Username = username
+	info.Password = password
+	info.Timeout = time.Second * 10
+
+	this.session, err = mgo.DialWithInfo(info)
+	if err != nil {
+		return false, err
+	}
+
+	this.session.SetMode(mgo.Strong, true)
+
+	this.db = db
+
+	return true, nil
+}
+
+func (this *Server) sessionCopy(colName string) (*mgo.Session, *mgo.Collection, error) {
+	if this.session == nil {
+		return nil, nil, errors.New("not connected")
+
+	}
+	session := this.session.Copy()
+	collection := session.DB(this.db).C(colName)
+	return session, collection, nil
 }
 
 func (this *Server) clientGo(conn *websocket.Conn) {
+	var auth bool = false
 	for {
 		_, req, err := conn.ReadMessage()
 		if err != nil {
@@ -188,23 +177,39 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 			return
 		}
 
+		//check auth
+		if cmd.Action != ID_LOGIN && cmd.Action != ID_REGISTER && !auth {
+			log.Printf("unauthorized request:%v\n", cmd.Action)
+			genResp := &GeneralResp{Action: cmd.Action, Status: STATUS_UNAUTHORIZED}
+			jsonResp, _ := json.Marshal(genResp)
+			conn.WriteMessage(websocket.TextMessage, jsonResp)
+			continue
+		}
 		resp, err := handler(req, conn)
 
+		//error response
 		showErr(err)
 		if err != nil {
 			genResp := &GeneralResp{Action: cmd.Action, Status: STATUS_FAILED}
 			errResp, _ := json.Marshal(genResp)
-			resp = string(errResp)
+
+			conn.WriteMessage(websocket.TextMessage, errResp)
+			continue
 		}
 
 		if resp != nil {
 			jsonResp, err := json.Marshal(resp)
-			if err == nil {
+			if err != nil {
 				showErr(err)
+				continue
 			}
+
+			if cmd.Action == ID_LOGIN {
+				auth = true
+			}
+
 			log.Printf("resp: %v\n", string(jsonResp))
 			conn.WriteMessage(websocket.TextMessage, jsonResp)
-
 		}
 
 	}

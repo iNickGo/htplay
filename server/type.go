@@ -1,8 +1,20 @@
 package main
 
+type Register struct {
+	Action   string `json:"action"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type RegisterResp struct {
+	Action string `json:"action"`
+	Status string `json:"status"`
+}
+
 type Login struct {
 	Action   string `json:"action"`
 	Username string `json:"username"`
+	Password string `json:"password"`
 	Token    string `json:"token"`
 	UserType string `json:"user_type"`
 }
@@ -24,8 +36,9 @@ type Friend struct {
 
 type FriendListResp struct {
 	Action string   `json:"action"`
-	List   []Friend `json:"list`
+	List   []Friend `json:"list"`
 }
+
 type Message struct {
 	Action  string `json:"action"`
 	From    string `json:"from"`
