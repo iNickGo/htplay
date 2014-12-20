@@ -30,13 +30,6 @@ func main() {
 		os.Exit(0)
 	}()
 
-	/*
-		users := make([]DBUser, 0)
-		err := g_server.FindNearPeople(-114, 51.0, 10, &users)
-		showErr(err)
-		log.Printf("len:%v\n", len(users))
-	*/
-
 	exitSig := make(chan os.Signal)
 	signal.Notify(exitSig, os.Kill, os.Interrupt, syscall.SIGTERM)
 	<-exitSig
@@ -55,6 +48,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func entry(resp http.ResponseWriter, req *http.Request) {
+	log.Println("new client...")
 	var err error
 	var clientConn *websocket.Conn
 	clientConn, err = upgrader.Upgrade(resp, req, nil)

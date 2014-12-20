@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"github.com/kellydunn/golang-geo"
@@ -40,11 +41,10 @@ func (this *Server) InitServer() {
 	this.clients = make(map[string]*Client)
 	this.handlers = make(map[string]HANDLER)
 
+	this.handlers[ID_REGISTER] = this.register
 	this.handlers[ID_LOGIN] = this.login
-	//	this.handlers[ID_FRIEND_LIST] = this.friend_list
 	this.handlers[ID_NEARBY_LIST] = this.nearbyList
 	this.handlers[ID_MESSAGE] = this.message
-	this.handlers[ID_REGISTER] = this.register
 
 	this.handlers[ID_UPDATE_LOC] = this.updateLoc
 
@@ -158,7 +158,9 @@ func (this *Server) login(req []byte, data interface{}) (interface{}, error) {
 
 	}
 
-	//todo: check login
+	//filter $ sign
+	cmd.Username = strings.Replace(cmd.Username, "$", "", -1)
+
 	user := &DBUser{}
 	err := this.GetUser(cmd.Username, user)
 	if err == mgo.ErrNotFound {

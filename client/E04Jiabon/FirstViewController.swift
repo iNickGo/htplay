@@ -8,9 +8,13 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+import Starscream
 
+class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.36:8080", path: "/")!)
+    
     let APP_MESSAGE : String = "E04 甲奔拉！"
+
     
     @IBOutlet weak var myTabelView: UITableView!
     
