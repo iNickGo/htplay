@@ -2,7 +2,6 @@
 //  client.swift
 //  E04Jiabon
 //
-//  Created by nick on 12/20/14.
 //  Copyright (c) 2014 htplay. All rights reserved.
 //
 
@@ -14,12 +13,20 @@ import SwiftyJSON
 import Foundation
 import CoreLocation
 
+private let _SingletonASharedInstance = Client()
+
 
 class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
+    class var sharedInstance : Client {
+        return _SingletonASharedInstance
+    }
+    
     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.3:8080", path: "/service")!)
     var user: String = ""
     var pwd: String = ""
     var auth: Bool = false
+    var img: String = ""
+    var connected: Bool = false
     let manager = CLLocationManager()
     
     override init() {
@@ -28,7 +35,6 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
 
         self.manager.delegate = self
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
-
     }
     
     
@@ -41,7 +47,11 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         let location = locations.last as CLLocation
         println("lat = \(location.coordinate.latitude)")
         println("lng = \(location.coordinate.longitude)")
-
+        
+        if self.connected && self.auth {
+            var json:JSON = ["action":"update_loc", "lat": location.coordinate.latitude, "lng": location.coordinate.longitude]
+            socket.writeData(json.rawData()!)
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -73,7 +83,14 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         socket.connect()
     }
     
-    
+    func uploadImg(var data: String) {
+        if auth {
+            var json: JSON = ["action": "upload_img", "img":data]
+            socket.writeData(json.rawData()!)
+            
+            img = data
+        }
+    }
     
     func setInfo(user: String, pwd: String) {
         self.user = user
@@ -83,6 +100,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     func websocketDidConnect() {
         println("websocket is connected")
+        connected = true
         
         if !auth {
             var json:JSON = ["action":"login", "username":user,"password":pwd]
@@ -105,12 +123,11 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     func websocketDidReceiveMessage(text: String) {
         println("Received text: \(text)")
         var json:JSON = JSON(data: text.dataUsingEncoding(NSUTF8StringEncoding)!)
-        println("json:" + json["action"].stringValue)
         
         switch json["action"].stringValue {
             case "login_resp":
                 if json["status"] == "OK" {
-                    
+                    auth = true
                 }
             default:
                 println("unhandled: " + json["action"].stringValue)
