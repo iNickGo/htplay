@@ -27,15 +27,21 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
 
 
         self.manager.delegate = self
+        self.manager.desiredAccuracy = kCLLocationAccuracyBest
+
+    }
+    
+    
+    func initLocation() {
         self.manager.requestAlwaysAuthorization()
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         
         let location = locations.last as CLLocation
-        
-        println("didUpdateLocations:  (location.coordinate.latitude), (location.coordinate.longitude)")
-        
+        println("lat = \(location.coordinate.latitude)")
+        println("lng = \(location.coordinate.longitude)")
+
     }
     
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {

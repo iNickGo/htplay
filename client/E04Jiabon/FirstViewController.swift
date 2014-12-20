@@ -28,6 +28,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         myTabelView.delegate = self
         myTabelView.dataSource = self
         
+        client.initLocation()
         client.setInfo("nick", pwd: "1234")
         client.connect()
     }
