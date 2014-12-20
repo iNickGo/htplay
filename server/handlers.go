@@ -12,6 +12,74 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	ID_REGISTER      = "register"
+	ID_REGISTER_RESP = "register_resp"
+
+	ID_LOGIN      = "login"
+	ID_LOGIN_RESP = "login_resp"
+
+	ID_UPDATE_LOC = "update_loc"
+
+	ID_FRIEND_LIST      = "friend_list"
+	ID_FRIEND_LIST_RESP = "friend_list_resp"
+	ID_MESSAGE          = "message"
+	ID_RECV_MESSAGE     = "recv_message"
+
+	ID_CREATE_GROUP     = "create_group"
+	ID_CREATE_GROUP_ACK = "create_group_ack"
+
+	ID_JOIN_GROUP      = "join_group"
+	ID_JOIN_GROUP_RESP = "join_group_resp"
+
+	ID_LIST_GROUP     = "list_group"
+	ID_LIST_GROUP_ACK = "list_group_ack"
+
+	ID_GROUP_CHAT      = "group_chat"
+	ID_RECV_GROUP_CHAT = "recv_group_chat"
+)
+
+const (
+	STATUS_OK           = "OK"
+	STATUS_FAILED       = "Failed"
+	STATUS_UNAUTHORIZED = "UnAuthorized"
+	EMPTY_RESP          = ""
+)
+
+func (this *Server) InitServer() {
+	this.clients = make(map[string]*Client)
+	this.handlers = make(map[string]HANDLER)
+
+	this.handlers[ID_LOGIN] = this.login
+	this.handlers[ID_FRIEND_LIST] = this.friend_list
+	this.handlers[ID_MESSAGE] = this.message
+	this.handlers[ID_REGISTER] = this.register
+
+	this.handlers[ID_UPDATE_LOC] = this.updateLoc
+
+	this.initMongo(DB_IP, DB_PORT, DB_NAME, DB_USER, DB_PWD)
+}
+
+func (this *Server) updateLoc(req []byte, data interface{}) (interface{}, error) {
+	cmd := &UpdateLoc{}
+	json.Unmarshal(req, cmd)
+
+	username := data.(string)
+	user := &DBUser{}
+	err := this.GetUser(username, user)
+	if err == mgo.ErrNotFound {
+		return EMPTY_RESP, errors.New("user not found")
+	}
+
+	user.Lat = cmd.Lat
+	user.Lng = cmd.Lng
+
+	//todo err check
+	this.UpdateUser(user)
+
+	return EMPTY_RESP, nil
+}
+
 func (this *Server) register(req []byte, data interface{}) (interface{}, error) {
 	cmd := &Register{}
 	json.Unmarshal(req, cmd)

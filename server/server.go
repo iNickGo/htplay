@@ -13,37 +13,6 @@ import (
 )
 
 const (
-	ID_REGISTER      = "register"
-	ID_REGISTER_RESP = "register_resp"
-
-	ID_LOGIN            = "login"
-	ID_LOGIN_RESP       = "login_resp"
-	ID_FRIEND_LIST      = "friend_list"
-	ID_FRIEND_LIST_RESP = "friend_list_resp"
-	ID_MESSAGE          = "message"
-	ID_RECV_MESSAGE     = "recv_message"
-
-	ID_CREATE_GROUP     = "create_group"
-	ID_CREATE_GROUP_ACK = "create_group_ack"
-
-	ID_JOIN_GROUP      = "join_group"
-	ID_JOIN_GROUP_RESP = "join_group_resp"
-
-	ID_LIST_GROUP     = "list_group"
-	ID_LIST_GROUP_ACK = "list_group_ack"
-
-	ID_GROUP_CHAT      = "group_chat"
-	ID_RECV_GROUP_CHAT = "recv_group_chat"
-)
-
-const (
-	STATUS_OK           = "OK"
-	STATUS_FAILED       = "Failed"
-	STATUS_UNAUTHORIZED = "UnAuthorized"
-	EMPTY_RESP          = ""
-)
-
-const (
 	DB_USER = "htplay"
 	DB_PWD  = "htplay1234"
 	DB_NAME = "htplay"
@@ -110,18 +79,6 @@ func NewServer() *Server {
 	return srv
 }
 
-func (this *Server) InitServer() {
-	this.clients = make(map[string]*Client)
-	this.handlers = make(map[string]HANDLER)
-
-	this.handlers[ID_LOGIN] = this.login
-	this.handlers[ID_FRIEND_LIST] = this.friend_list
-	this.handlers[ID_MESSAGE] = this.message
-	this.handlers[ID_REGISTER] = this.register
-
-	this.initMongo(DB_IP, DB_PORT, DB_NAME, DB_USER, DB_PWD)
-}
-
 func (this *Server) initMongo(ip string, port int, db string, username string, password string) (bool, error) {
 	var err error
 	info := &mgo.DialInfo{}
@@ -155,6 +112,8 @@ func (this *Server) sessionCopy(colName string) (*mgo.Session, *mgo.Collection, 
 
 func (this *Server) clientGo(conn *websocket.Conn) {
 	var auth bool = false
+	var username string
+
 	for {
 		_, req, err := conn.ReadMessage()
 		if err != nil {
@@ -169,6 +128,7 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 			return
 		}
 
+		log.Printf("original client data:%v\n", string(req))
 		log.Printf("general cmd:%v\n", cmd.Action)
 
 		handler := this.handlers[cmd.Action]
@@ -185,7 +145,14 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 			conn.WriteMessage(websocket.TextMessage, jsonResp)
 			continue
 		}
-		resp, err := handler(req, conn)
+
+		var data interface{} = username
+		switch cmd.Action {
+		case ID_LOGIN:
+			data = conn
+		}
+
+		resp, err := handler(req, data)
 
 		//error response
 		showErr(err)
@@ -205,7 +172,10 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 			}
 
 			if cmd.Action == ID_LOGIN {
+				cmd := &Login{}
+				json.Unmarshal(req, cmd)
 				auth = true
+				username = cmd.Username
 			}
 
 			log.Printf("resp: %v\n", string(jsonResp))

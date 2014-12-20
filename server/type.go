@@ -25,6 +25,12 @@ type LoginResp struct {
 	Status   string `json:"status"`
 }
 
+type UpdateLoc struct {
+	Action string  `json:"action"`
+	Lat    float64 `json:"lat"`
+	Lng    float64 `json:"lng"`
+}
+
 type FriendList struct {
 	Action string `json:"action"`
 }
