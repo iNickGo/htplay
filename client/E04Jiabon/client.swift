@@ -98,9 +98,9 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         socket.connect()
     }
     
-    func uploadImg(var data: String) {
+    func uploadImg(var data: String, var skill: String) {
         if auth {
-            var json: JSON = ["action": "upload_cardinfo", "img":data, "name": user , "engname":user, "skill":"c++"]
+            var json: JSON = ["action": "upload_cardinfo", "img":data, "name": user , "engname":user, "skill": skill]
             socket.writeData(json.rawData()!)
             
             img = data
@@ -116,7 +116,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     func nearbyList() {
         if auth {
-            var json:JSON = ["action":"nearby_list","lng": lng , "lat": lat, "distance": 3.0]
+            var json:JSON = ["action":"nearby_list","lng": lng , "lat": lat, "distance": 30.0]
             socket.writeData(json.rawData()!)
         }
     }
@@ -211,7 +211,14 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
                 gotMessage(from, msg: msg)
             
             case "nearby_list_resp":
-                nearbyListResp(json)
+//                println("status:  " + json["status"].stringValue)
+  
+                if json["status"].stringValue != "OK" {
+                    nearbyList()
+                }else {
+                    nearbyListResp(json)    
+                }
+            
             
             default:
                 if json["status"].stringValue != "OK" {

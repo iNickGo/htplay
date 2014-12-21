@@ -10,6 +10,8 @@ import UIKit
 
 class ChatPageViewController: UIViewController {
 
+    @IBOutlet var btn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
