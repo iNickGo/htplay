@@ -23,9 +23,16 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-       // self.view.backgroundColor = UIColor.grayColor()
-        
         photo.image = UIImage(named: ("dinner.png"))
+        photo.layer.borderColor = UIColor.blackColor().CGColor;
+        photo.layer.borderWidth = 2.0;
+        
+        // Set image corner radius
+        photo.layer.cornerRadius = 10.0;
+    
+        photo.layer.shadowColor = UIColor.blueColor().CGColor;
+        photo.layer.shadowOffset = CGSize(width: 10.0, height:  20.0)
+        photo.clipsToBounds = true
         
         var storedUserName: AnyObject? = userDefault.valueForKey("usrname")
         var storedPassword: AnyObject? = userDefault.valueForKey("password")
