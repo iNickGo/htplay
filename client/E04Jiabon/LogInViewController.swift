@@ -12,6 +12,7 @@ class LogInViewController: UIViewController {
 
     let client : Client = Client.sharedInstance
     
+    @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var inputName: UITextField!
     @IBOutlet weak var inputPwd: UITextField!
     
@@ -21,8 +22,12 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var storedUserName = userDefault.valueForKey("usrname")
-        var storedPassword = userDefault.valueForKey("password")
+       // self.view.backgroundColor = UIColor.grayColor()
+        
+        photo.image = UIImage(named: ("dinner.png"))
+        
+        var storedUserName: AnyObject? = userDefault.valueForKey("usrname")
+        var storedPassword: AnyObject? = userDefault.valueForKey("password")
         
         if (storedUserName != nil && storedPassword != nil)
         {
