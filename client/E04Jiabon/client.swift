@@ -60,6 +60,17 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
             
             lat = location.coordinate.latitude
             lng = location.coordinate.longitude
+            
+            //for simulator
+            if lat == 0.0 {
+                lat =  25.0468833400897
+            }
+            if lng  == 0.0 {
+                lng =  121.512856824504
+                
+            }
+
+
         }
     }
     

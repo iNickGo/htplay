@@ -55,9 +55,9 @@
 	<string></string>
 	<key>CFBundleDisplayName</key>
 	<string></string>
-	<key>NSLocationUsageDescription</key>
-	<string>use location service to report your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
+	<string>use location service to report your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>use location service to report your location</string>
 </dict>
 </plist>

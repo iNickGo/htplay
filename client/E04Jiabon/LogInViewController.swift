@@ -39,6 +39,8 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         inputPwd.delegate = self
         
         
+        client.initLocation()
+        
         client.loginView = self
         client.connect()
     }
