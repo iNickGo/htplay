@@ -10,8 +10,14 @@ import UIKit
 
 class SecondViewController: UIViewController {
 
+    @IBOutlet var btn: UIButton!
+
     @IBAction func onClick(sender: AnyObject) {
-        println("test") 
+
+
+        let image = UIImage(named: "open.png") as UIImage!
+
+        btn.setImage(image, forState: .Normal)
 
     }
     override func viewDidLoad() {

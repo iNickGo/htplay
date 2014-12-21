@@ -17,8 +17,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var inputPwd: UITextField! = nil
     
     @IBOutlet weak var regosterBtm: UIButton!
-    var userDefault = NSUserDefaults.standardUserDefaults()
     
+    var userDefault = NSUserDefaults.standardUserDefaults()    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,12 +32,15 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         if (storedUserName != nil && storedPassword != nil)
         {
-            self.regosterBtm.setTitle("Login", forState: UIControlState.Normal)
             self.inputName.text = storedUserName as String
             self.inputPwd.text = storedPassword as String
         }
         inputName.delegate = self
         inputPwd.delegate = self
+        
+        
+        client.loginView = self
+        client.connect()
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,15 +48,18 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @IBAction func onLogin() {
+        if client.connected {
+            client.login(inputName.text, pwd: inputPwd.text)            
+        }else {
+            println("client is not connected")
+        }
+
+    }
+    
     @IBAction func onClickRegister(sender: AnyObject) {
-        println(inputName.text + " " + inputPwd.text)
         client.register(inputName.text, pwd: inputPwd.text)
-        client.login(inputName.text, pwd: inputPwd.text)
-        
-        
-        userDefault.setValue(inputName.text, forKey: "usrname")
-        userDefault.setValue(inputPwd.text, forKey: "password")
-        userDefault.synchronize()
     }
 
     /*

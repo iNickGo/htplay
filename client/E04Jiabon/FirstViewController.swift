@@ -45,17 +45,13 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        client.view = self
+        
         
         // register tabel view
         self.myTabelView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         myTabelView.delegate = self
         myTabelView.dataSource = self
-        
-
-        client.initLocation()
-        client.connect()
-        
+                
         var storedNumber = userDefault.integerForKey("number")
         //userDefault.setInteger(number , forKey: "number")
         //userDefault.synchronize()
@@ -63,6 +59,9 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         storedNumber+=1
         userDefault.setInteger(storedNumber , forKey: "number")
         userDefault.synchronize()
+        
+        client.view = self
+        client.nearbyList()
         
     }
     

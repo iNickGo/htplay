@@ -76,6 +76,7 @@
         <!--Second-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
                 <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="E04Jiabon" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -103,22 +104,17 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="VBZ-te-l7B">
-                                <rect key="frame" x="69" y="108" width="236" height="152"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="專長: C++" borderStyle="roundedRect" minimumFontSize="17" id="ZF2-Ye-kRu">
+                                <rect key="frame" x="91" y="405" width="233" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="case.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onClick:" destination="4Nw-L8-lE0" eventType="touchDown" id="9Xd-h1-0Cc"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Second" image="second" id="cPa-gy-q4n"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="399.5" y="340.5"/>
         </scene>
@@ -161,7 +157,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="HFz-qy-civ">
-                                <rect key="frame" x="265" y="471" width="57" height="30"/>
+                                <rect key="frame" x="53" y="455" width="57" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -170,7 +166,18 @@
                                 </state>
                                 <connections>
                                     <action selector="onClickRegister:" destination="0Wh-cc-gkX" eventType="touchUpInside" id="IMI-DM-kXt"/>
-                                    <segue destination="49e-Tb-3d3" kind="modal" id="gr3-CG-cKy"/>
+                                    <segue destination="49e-Tb-3d3" kind="modal" id="9vX-ha-m3x"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2gW-7o-EW3">
+                                <rect key="frame" x="284" y="455" width="38" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLogin" destination="0Wh-cc-gkX" eventType="touchDown" id="Bgx-XB-ZzE"/>
+                                    <segue destination="49e-Tb-3d3" kind="modal" id="5jQ-i6-4wz"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -209,7 +216,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="case.png" width="234" height="164"/>
         <image name="first" width="30" height="30"/>
         <image name="second" width="30" height="30"/>
     </resources>
@@ -219,6 +225,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gr3-CG-cKy"/>
+        <segue reference="9vX-ha-m3x"/>
     </inferredMetricsTieBreakers>
 </document>

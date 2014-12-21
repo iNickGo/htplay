@@ -21,9 +21,13 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         return _SingletonASharedInstance
     }
     
+    var userDefault = NSUserDefaults.standardUserDefaults()
+    
     var lng: Float64 = 0
     var lat: Float64 = 0
     var view: AnyObject? = nil
+    var loginView: AnyObject? = nil
+    
     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.3:8080", path: "/service")!)
     var user: String = ""
     var pwd: String = ""
@@ -34,7 +38,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     override init() {
         super.init()
-
+        
 
         self.manager.delegate = self
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -138,8 +142,13 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     }
     
     func login(username: String, pwd: String) {
+        if !connected {
+            return
+        }
+        println("send login..s")
         self.setInfo(username, pwd: pwd)
-        self.connect()
+        var json:JSON = ["action":"login", "username":username,"password":pwd]
+        socket.writeData(json.rawData()!)        
     }
     
     //got message call back
@@ -158,11 +167,6 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     func websocketDidConnect() {
         println("websocket is connected")
         connected = true
-        
-        if !auth {
-            var json:JSON = ["action":"login", "username":user,"password":pwd]
-            socket.writeData(json.rawData()!)
-        }
     }
     
     func websocketDidDisconnect(error: NSError?) {
@@ -185,12 +189,11 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
             case "login_resp":
                 if json["status"] == "OK" {
                     auth = true
+                
+                    userDefault.setValue(user, forKey: "usrname")
+                    userDefault.setValue(pwd, forKey: "password")
+                    userDefault.synchronize()
                     
-                    //get nearby list
-                    nearbyList()
-                    
-                    //test!! send message to self
-                    //sendMessage(user, msg: "hi me")
                 }
             case "register_resp":
                 if json["status"] == "OK" {
