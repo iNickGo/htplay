@@ -8,13 +8,13 @@
 
 import UIKit
 
-class LogInViewController: UIViewController {
+class LogInViewController: UIViewController, UITextFieldDelegate {
 
     let client : Client = Client.sharedInstance
     
     @IBOutlet weak var photo: UIImageView!
-    @IBOutlet weak var inputName: UITextField!
-    @IBOutlet weak var inputPwd: UITextField!
+    @IBOutlet weak var inputName: UITextField! = nil
+    @IBOutlet weak var inputPwd: UITextField! = nil
     
     @IBOutlet weak var regosterBtm: UIButton!
     var userDefault = NSUserDefaults.standardUserDefaults()
@@ -35,6 +35,8 @@ class LogInViewController: UIViewController {
             self.inputName.text = storedUserName as String
             self.inputPwd.text = storedPassword as String
         }
+        inputName.delegate = self
+        inputPwd.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,5 +64,15 @@ class LogInViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+       inputName.resignFirstResponder()
+        self.view.endEditing(true)
+        
+    }
 }
