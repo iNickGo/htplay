@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		014B1C571A45E6FF00BE890B /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0196E6151A45DCA8006E632D /* Starscream.framework */; };
-		014B1C581A45E6FF00BE890B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0196E6061A45DC99006E632D /* SwiftyJSON.framework */; };
 		014B1C591A45E71200BE890B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0196E5F81A45D6BC006E632D /* CoreLocation.framework */; };
 		014B1C5A1A45E76B00BE890B /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0196E6151A45DCA8006E632D /* Starscream.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		014B1C5D1A45E78300BE890B /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0196E6061A45DC99006E632D /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -20,6 +18,9 @@
 		B61774731A455DD70054E0B5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B61774721A455DD70054E0B5 /* Images.xcassets */; };
 		B61774761A455DD70054E0B5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B61774741A455DD70054E0B5 /* LaunchScreen.xib */; };
 		B61774821A455DD80054E0B5 /* E04JiabonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61774811A455DD80054E0B5 /* E04JiabonTests.swift */; };
+		B656430D1A4652C8002877FA /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B656430C1A4652C8002877FA /* LogInViewController.swift */; };
+		B65E96621A464307004F694A /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B65E96611A464307004F694A /* Starscream.framework */; };
+		B65E96641A464314004F694A /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B65E96631A464314004F694A /* SwiftyJSON.framework */; };
 		B6FA18E51A459A8B004C3FDB /* ChatPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FA18E41A459A8B004C3FDB /* ChatPageViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,9 @@
 		B617747B1A455DD80054E0B5 /* E04JiabonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = E04JiabonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61774801A455DD80054E0B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B61774811A455DD80054E0B5 /* E04JiabonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E04JiabonTests.swift; sourceTree = "<group>"; };
+		B656430C1A4652C8002877FA /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		B65E96611A464307004F694A /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "starscream/build/Debug-iphonesimulator/Starscream.framework"; sourceTree = "<group>"; };
+		B65E96631A464314004F694A /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = "SwiftyJSON-master/build/Debug-iphonesimulator/SwiftyJSON.framework"; sourceTree = "<group>"; };
 		B6FA18E41A459A8B004C3FDB /* ChatPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,9 +131,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B65E96641A464314004F694A /* SwiftyJSON.framework in Frameworks */,
+				B65E96621A464307004F694A /* Starscream.framework in Frameworks */,
 				014B1C591A45E71200BE890B /* CoreLocation.framework in Frameworks */,
-				014B1C571A45E6FF00BE890B /* Starscream.framework in Frameworks */,
-				014B1C581A45E6FF00BE890B /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +172,8 @@
 		B617745B1A455DD70054E0B5 = {
 			isa = PBXGroup;
 			children = (
+				B65E96631A464314004F694A /* SwiftyJSON.framework */,
+				B65E96611A464307004F694A /* Starscream.framework */,
 				0196E5F81A45D6BC006E632D /* CoreLocation.framework */,
 				0196E60D1A45DCA8006E632D /* Starscream.xcodeproj */,
 				0196E5FE1A45DC99006E632D /* SwiftyJSON.xcodeproj */,
@@ -193,6 +199,7 @@
 				B617746B1A455DD70054E0B5 /* FirstViewController.swift */,
 				B617746D1A455DD70054E0B5 /* SecondViewController.swift */,
 				B6FA18E41A459A8B004C3FDB /* ChatPageViewController.swift */,
+				B656430C1A4652C8002877FA /* LogInViewController.swift */,
 				B617746F1A455DD70054E0B5 /* Main.storyboard */,
 				B61774721A455DD70054E0B5 /* Images.xcassets */,
 				B61774741A455DD70054E0B5 /* LaunchScreen.xib */,
@@ -400,6 +407,7 @@
 			files = (
 				B617746E1A455DD70054E0B5 /* SecondViewController.swift in Sources */,
 				B617746A1A455DD70054E0B5 /* AppDelegate.swift in Sources */,
+				B656430D1A4652C8002877FA /* LogInViewController.swift in Sources */,
 				B617746C1A455DD70054E0B5 /* FirstViewController.swift in Sources */,
 				B6FA18E51A459A8B004C3FDB /* ChatPageViewController.swift in Sources */,
 				0196E5F71A45D29B006E632D /* client.swift in Sources */,
@@ -532,6 +540,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: ChingWen Huang (8TFF4QGM6P)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/starscream/build/Debug-iphonesimulator",
+					"$(PROJECT_DIR)/SwiftyJSON-master/build/Debug-iphonesimulator",
+				);
 				INFOPLIST_FILE = E04Jiabon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -545,6 +558,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: ChingWen Huang (8TFF4QGM6P)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/starscream/build/Debug-iphonesimulator",
+					"$(PROJECT_DIR)/SwiftyJSON-master/build/Debug-iphonesimulator",
+				);
 				INFOPLIST_FILE = E04Jiabon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

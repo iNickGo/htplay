@@ -114,8 +114,13 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     }
     
     func register(username: String, pwd: String) {
-        var json:JSON = ["action":"register", "username":user,"password":pwd]
+        var json:JSON = ["action":"register", "username":username,"password":pwd]
         socket.writeData(json.rawData()!)
+    }
+    
+    func login(username: String, pwd: String) {
+        self.setInfo(username, pwd: pwd)
+        self.connect()
     }
     
     //got message call back
@@ -127,7 +132,6 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         self.user = user
         self.pwd = pwd
     }
-    
     
     func websocketDidConnect() {
         println("websocket is connected")

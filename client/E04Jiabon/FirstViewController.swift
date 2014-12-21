@@ -47,7 +47,6 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
 
         client.initLocation()
-        client.setInfo("nick", pwd: "1234")
         client.connect()
         
         var storedNumber = userDefault.integerForKey("number")
@@ -146,7 +145,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         println(toString(indexPath.row) + " : " + self.userList[indexPath.row].name);
         
         cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: cellIdentifier)
-        cell.textLabel.text = self.userList[indexPath.row].name
+        cell.textLabel?.text = self.userList[indexPath.row].name
         cell.detailTextLabel?.text = toString(self.userList[indexPath.row].distance) + " 公尺"
         
         return cell
