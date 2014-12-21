@@ -61,7 +61,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         userDefault.synchronize()
         
         client.view = self
-        client.nearbyList()
+
         
     }
     
@@ -166,10 +166,9 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         println("didHighlightRowAtIndexPath : " + toString(indexPath.row) + " : " + self.userList[indexPath.row].name);
 
-        //sendNameMsgTo(name)
-        //recvMsgFrom(name)
-
-         //self.presentCamera()
+        sendNameMsgTo(name)
+        
+        //self.presentCamera()
     }
     
     func showAlertMsg(name: String, msg: String)
@@ -203,8 +202,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func sendNameMsgTo(name: String)
     {
-        // TO DO: Server send Message to name
-        println("sendNameMsgTo : " + name);
+        client.sendMessage(name, msg: "E04")
     }
     
     func recvMsgFrom(name: String, msg: String)

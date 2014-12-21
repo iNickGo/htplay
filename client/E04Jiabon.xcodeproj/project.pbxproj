@@ -11,6 +11,9 @@
 		014B1C5A1A45E76B00BE890B /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0196E6151A45DCA8006E632D /* Starscream.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		014B1C5D1A45E78300BE890B /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0196E6061A45DC99006E632D /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0196E5F71A45D29B006E632D /* client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0196E5F61A45D29B006E632D /* client.swift */; };
+		01DCA13C1A468A1E008F86D8 /* case.png in Resources */ = {isa = PBXBuildFile; fileRef = 01DCA13B1A468A1E008F86D8 /* case.png */; };
+		01DCA1461A469022008F86D8 /* open.png in Resources */ = {isa = PBXBuildFile; fileRef = 01DCA1451A469022008F86D8 /* open.png */; };
+		01DCA1481A469145008F86D8 /* hero.png in Resources */ = {isa = PBXBuildFile; fileRef = 01DCA1471A469145008F86D8 /* hero.png */; };
 		B617746A1A455DD70054E0B5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61774691A455DD70054E0B5 /* AppDelegate.swift */; };
 		B617746C1A455DD70054E0B5 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B617746B1A455DD70054E0B5 /* FirstViewController.swift */; };
 		B617746E1A455DD70054E0B5 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B617746D1A455DD70054E0B5 /* SecondViewController.swift */; };
@@ -109,6 +112,9 @@
 		0196E5F81A45D6BC006E632D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0196E5FE1A45DC99006E632D /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = "SwiftyJSON-master/SwiftyJSON.xcodeproj"; sourceTree = "<group>"; };
 		0196E60D1A45DCA8006E632D /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
+		01DCA13B1A468A1E008F86D8 /* case.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = case.png; sourceTree = "<group>"; };
+		01DCA1451A469022008F86D8 /* open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = open.png; sourceTree = "<group>"; };
+		01DCA1471A469145008F86D8 /* hero.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero.png; sourceTree = "<group>"; };
 		B61774641A455DD70054E0B5 /* E04Jiabon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = E04Jiabon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61774681A455DD70054E0B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B61774691A455DD70054E0B5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -212,6 +218,9 @@
 		B61774671A455DD70054E0B5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				01DCA1471A469145008F86D8 /* hero.png */,
+				01DCA1451A469022008F86D8 /* open.png */,
+				01DCA13B1A468A1E008F86D8 /* case.png */,
 				B61774681A455DD70054E0B5 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -386,8 +395,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B61774711A455DD70054E0B5 /* Main.storyboard in Resources */,
+				01DCA1461A469022008F86D8 /* open.png in Resources */,
 				B61774761A455DD70054E0B5 /* LaunchScreen.xib in Resources */,
 				B61774731A455DD70054E0B5 /* Images.xcassets in Resources */,
+				01DCA13C1A468A1E008F86D8 /* case.png in Resources */,
+				01DCA1481A469145008F86D8 /* hero.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,7 +551,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: ChingWen Huang (8TFF4QGM6P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/starscream/build/Debug-iphonesimulator",
@@ -548,7 +561,7 @@
 				INFOPLIST_FILE = E04Jiabon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5a67d87e-f7a0-4dc7-9c85-0e3570c055b1";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -557,7 +570,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: ChingWen Huang (8TFF4QGM6P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/starscream/build/Debug-iphonesimulator",
@@ -566,7 +580,7 @@
 				INFOPLIST_FILE = E04Jiabon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5a67d87e-f7a0-4dc7-9c85-0e3570c055b1";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
