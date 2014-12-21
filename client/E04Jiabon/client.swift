@@ -95,20 +95,22 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     func sendMessage(to: String, msg: String) {
         if auth {
-            var json:JSON = ["action":"message", "to": to,"from": user]
+            var json:JSON = ["action":"message", "to": to,"from": user, "msg": msg]
             socket.writeData(json.rawData()!)
         }
     }
     
     func nearbyList() {
         if auth {
-            var json:JSON = ["action":"nearby_ilst"]
+            var json:JSON = ["action":"nearby_list"]
             socket.writeData(json.rawData()!)
         }
     }
     
     func nearbyListResp(json: JSON) {
-        
+        for (index: String, subJson: JSON) in json {
+            println("index: \(index)")
+        }
     }
     
     func register(username: String, pwd: String) {
@@ -118,7 +120,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     //got message call back
     func gotMessage(from: String, msg: String) {
-        
+        println("got message \(from) \(msg)")
     }
     
     func setInfo(user: String, pwd: String) {
@@ -157,6 +159,12 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
             case "login_resp":
                 if json["status"] == "OK" {
                     auth = true
+                    
+                    //get nearby list
+                    nearbyList()
+                    
+                    //test!! send message to self
+                    sendMessage(user, msg: "hi me")
                 }
             case "register_resp":
                 if json["status"] == "OK" {
