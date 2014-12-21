@@ -38,6 +38,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     }
     
     
+    ////Location
     func initLocation() {
         self.manager.requestAlwaysAuthorization()
     }
@@ -92,6 +93,34 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         }
     }
     
+    func sendMessage(to: String, msg: String) {
+        if auth {
+            var json:JSON = ["action":"message", "to": to,"from": user]
+            socket.writeData(json.rawData()!)
+        }
+    }
+    
+    func nearbyList() {
+        if auth {
+            var json:JSON = ["action":"nearby_ilst"]
+            socket.writeData(json.rawData()!)
+        }
+    }
+    
+    func nearbyListResp(json: JSON) {
+        
+    }
+    
+    func register(username: String, pwd: String) {
+        var json:JSON = ["action":"register", "username":user,"password":pwd]
+        socket.writeData(json.rawData()!)
+    }
+    
+    //got message call back
+    func gotMessage(from: String, msg: String) {
+        
+    }
+    
     func setInfo(user: String, pwd: String) {
         self.user = user
         self.pwd = pwd
@@ -129,6 +158,18 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
                 if json["status"] == "OK" {
                     auth = true
                 }
+            case "register_resp":
+                if json["status"] == "OK" {
+                    //register ok
+                }
+            case "recv_message":
+                var msg = json["msg"].stringValue
+                var from = json["from"].stringValue
+                gotMessage(from, msg: msg)
+            
+            case "nearby_list_resp":
+                nearbyListResp(json)
+            
             default:
                 println("unhandled: " + json["action"].stringValue)
             
