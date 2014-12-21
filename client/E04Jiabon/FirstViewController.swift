@@ -10,10 +10,20 @@ import UIKit
 
 import MobileCoreServices
 
+import Foundation
+
+import Starscream
+import SwiftyJSON
+
 struct TOnlineUser
 {
     var name: String
-    var distance = 0
+    var distance: Float64
+    
+    init() {
+        name = ""
+        distance = 0.0
+    }
 }
 
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate  {
@@ -25,9 +35,6 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet weak var myTabelView: UITableView!
     
-    // this is fake data
-    var ListArray = ["Sandra", "Steven", "Jerry", "Nick", "Diro", "Bin", "Jack", "Ives", "Emma", "Rick", "阿毛", "蕃薯", "兩百", "Trista", "Joyce", "John"]
-   
     var userList: [TOnlineUser] = []
     
     var alert: UIAlertView = UIAlertView()
@@ -39,8 +46,6 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Do any additional setup after loading the view, typically from a nib.
         
         client.view = self
-        
-        searchDataBase()
         
         // register tabel view
         self.myTabelView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -184,19 +189,18 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
     }
     
-    func searchDataBase()
-    {
-        // TO DO: server give ui a list of name and distance
-        // please convert data to struct TOnlineUser
-        // then append data to userList
-        
-        
-        // this is a sample
-        for index in 0...(ListArray.count - 1) {
-            var data: TOnlineUser = TOnlineUser(name: ListArray[index], distance: index * 10)
-            self.userList.append(data)
+    func updateTableView(var arr: [TOnlineUser]) {
+        for user in arr {
+            //println(user.name)
+            //println(user.distance)
         }
+        self.userList = arr
+        
+        self.myTabelView.reloadData()
+
     }
+    
+  
     
     func sendNameMsgTo(name: String)
     {

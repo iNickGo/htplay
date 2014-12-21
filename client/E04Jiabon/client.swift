@@ -21,6 +21,8 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         return _SingletonASharedInstance
     }
     
+    var lng: Float64 = 0
+    var lat: Float64 = 0
     var view: AnyObject? = nil
     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.3:8080", path: "/service")!)
     var user: String = ""
@@ -47,12 +49,13 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         
         let location = locations.last as CLLocation
-        println("lat = \(location.coordinate.latitude)")
-        println("lng = \(location.coordinate.longitude)")
         
         if self.connected && self.auth {
             var json:JSON = ["action":"update_loc", "lat": location.coordinate.latitude, "lng": location.coordinate.longitude]
             socket.writeData(json.rawData()!)
+            
+            lat = location.coordinate.latitude
+            lng = location.coordinate.longitude
         }
     }
     
@@ -87,7 +90,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     func uploadImg(var data: String) {
         if auth {
-            var json: JSON = ["action": "upload_img", "img":data]
+            var json: JSON = ["action": "upload_cardinfo", "img":data, "name": user , "engname":user, "skill":"c++"]
             socket.writeData(json.rawData()!)
             
             img = data
@@ -103,15 +106,30 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     
     func nearbyList() {
         if auth {
-            var json:JSON = ["action":"nearby_list"]
+            var json:JSON = ["action":"nearby_list","lng": lng , "lat": lat, "distance": 3.0]
             socket.writeData(json.rawData()!)
         }
     }
     
     func nearbyListResp(json: JSON) {
-        for (index: String, subJson: JSON) in json {
-            println("index: \(index)")
+        var users: [TOnlineUser] = []
+        
+        for (index: String, subJson: JSON) in json["list"] {
+                var name = subJson["nickname"].stringValue
+                var dis = subJson["distance"].doubleValue
+                
+                var tuser = TOnlineUser()
+                tuser.distance = dis
+                tuser.name = name
+            
+                users.append(tuser)
+
         }
+//        println("user len: \(users.count)")
+        
+        var view = self.view as FirstViewController
+        view.updateTableView(users)
+
     }
     
     func register(username: String, pwd: String) {
@@ -172,7 +190,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
                     nearbyList()
                     
                     //test!! send message to self
-                    sendMessage(user, msg: "hi me")
+                    //sendMessage(user, msg: "hi me")
                 }
             case "register_resp":
                 if json["status"] == "OK" {
@@ -187,8 +205,12 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
                 nearbyListResp(json)
             
             default:
-                println("unhandled: " + json["action"].stringValue)
-            
+                if json["status"].stringValue != "OK" {
+                    print("command execution fail: ")
+                    println(json["action"].stringValue)
+                }else {
+                    println("unhandled: " + json["action"].stringValue)
+            }
         }
     }
     
