@@ -21,6 +21,7 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
         return _SingletonASharedInstance
     }
     
+    var view: AnyObject? = nil
     var socket = WebSocket(url: NSURL(scheme: "ws", host: "192.168.2.3:8080", path: "/service")!)
     var user: String = ""
     var pwd: String = ""
@@ -121,6 +122,9 @@ class Client: NSObject, WebSocketDelegate, CLLocationManagerDelegate {
     //got message call back
     func gotMessage(from: String, msg: String) {
         println("got message \(from) \(msg)")
+        
+        var viewController = self.view as FirstViewController
+        viewController.recvMsgFrom(from, msg:msg)
     }
     
     func setInfo(user: String, pwd: String) {
