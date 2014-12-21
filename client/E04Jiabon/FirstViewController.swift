@@ -38,6 +38,8 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        client.view = self
+        
         searchDataBase()
         
         // register tabel view
@@ -160,24 +162,24 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         println("didHighlightRowAtIndexPath : " + toString(indexPath.row) + " : " + self.userList[indexPath.row].name);
 
-        sendNameMsgTo(name)
-        recvMsgFrom(name)
+        //sendNameMsgTo(name)
+        //recvMsgFrom(name)
 
-         self.presentCamera()
+         //self.presentCamera()
     }
     
-    func showAlertMsg(name: String)
+    func showAlertMsg(name: String, msg: String)
     {
         alert.title =  name
-        alert.message = APP_MESSAGE
+        alert.message = msg
         alert.addButtonWithTitle("Ok")
         alert.show()
     }
     
-    func showLocalNotify(name: String)
+    func showLocalNotify(name: String, msg: String)
     {
         var notification:UILocalNotification = UILocalNotification()
-        notification.alertBody = name + " : " + APP_MESSAGE
+        notification.alertBody = name + " : " + msg
         notification.fireDate = NSDate(timeIntervalSinceNow: 5)
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
     }
@@ -200,22 +202,16 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         // TO DO: Server send Message to name
         println("sendNameMsgTo : " + name);
-        
-        
-        
     }
     
-    func recvMsgFrom(name: String)
+    func recvMsgFrom(name: String, msg: String)
     {
         // TO DO: Server receive Message to name
         println("recvMsgFrom : " + name);
         
-        
-        
-        
         // UI show Notify and alert window
-        showLocalNotify(name)
-        showAlertMsg(name)
+        showLocalNotify(name, msg: msg)
+        showAlertMsg(name, msg: msg)
     }
 }
 
