@@ -42,24 +42,13 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        
+
         // register tabel view
         self.myTabelView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         myTabelView.delegate = self
         myTabelView.dataSource = self
-                
-        var storedNumber = userDefault.integerForKey("number")
-        //userDefault.setInteger(number , forKey: "number")
-        //userDefault.synchronize()
-        println("read:" + toString(storedNumber))
-        storedNumber+=1
-        userDefault.setInteger(storedNumber , forKey: "number")
-        userDefault.synchronize()
         
         client.view = self
-
-        
     }
 
   
@@ -82,6 +71,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: cellIdentifier)
         cell.textLabel?.text = self.userList[indexPath.row].name
         cell.detailTextLabel?.text = toString(self.userList[indexPath.row].distance) + " 公尺"
+        cell.imageView?.image = UIImage(named: "dinner.png") as UIImage!
         
         return cell
     }

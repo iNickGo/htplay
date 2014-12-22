@@ -20,6 +20,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     var userDefault = NSUserDefaults.standardUserDefaults()    
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,6 +39,17 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         inputName.delegate = self
         inputPwd.delegate = self
         
+        
+        photo.image = UIImage(named: ("case.png"))
+        photo.layer.borderColor = UIColor.whiteColor().CGColor;
+        photo.layer.borderWidth = 5.0;
+        
+        // Set image corner radius
+        photo.layer.cornerRadius = 10.0;
+        
+        photo.layer.shadowColor = UIColor.blueColor().CGColor;
+        photo.layer.shadowOffset = CGSize(width: 10.0, height:  20.0)
+        photo.clipsToBounds = true
         
         client.initLocation()
         

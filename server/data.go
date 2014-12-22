@@ -2,20 +2,24 @@ package main
 
 import "gopkg.in/mgo.v2/bson"
 
+const (
+	COL_USER = "user"
+	COL_CARD = "card"
+)
+
 type Loc struct {
 	Lng float64 `bson:"lng"`
 	Lat float64 `bson:"lat"`
 }
+
 type DBUser struct {
 	Id       bson.ObjectId `bson:"_id"`
 	Username string        `bson:"username"`
 	Password string        `bson:"password"`
 	Loc      Loc           `bson:"loc"`
+	Img      bson.Binary   `bson:"img"`
+	Skill    string        `json:"skill"`
 }
-
-const (
-	COL_USER = "user"
-)
 
 func (this *Server) FindNearPeople(lng float64, lat float64, maxDistance float64, users *[]DBUser) error {
 

@@ -41,6 +41,7 @@ type NearbyList struct {
 type NearbyListResp struct {
 	Action string     `json:"action"`
 	List   []Stranger `json:"list"`
+	Status string     `json:"status"`
 }
 
 type StrangerList struct {
@@ -50,11 +51,6 @@ type StrangerList struct {
 type Stranger struct {
 	Nickname string  `json:"nickname"`
 	Distance float64 `json:"distance"`
-}
-
-type FriendListResp struct {
-	Action string     `json:"action"`
-	List   []Stranger `json:"list"`
 }
 
 type Message struct {
@@ -70,41 +66,15 @@ type RecvMessage struct {
 	Message string `json:"msg"`
 }
 
-type CreateGroup struct {
+type UploadCardInfo struct {
 	Action string `json:"action"`
-	Name   string `json:"name"`
-}
 
-type CreateGroupResp struct {
+	Img     string `json:"img"`
+	Name    string `json:"name"`
+	Engname string `json:"engname"`
+	Skill   string `json:"skill"`
+}
+type UploadCardInfoResp struct {
 	Action string `json:"action"`
-	ID     string `json:"group_id"`
-}
-
-type JoinGroup struct {
-	Action string `json:"action"`
-	ID     string `json:"group_id"`
-}
-
-type ListGroup struct {
-	Action string `json:"action"`
-}
-
-type Group struct {
-	ID   string `json:"gropu_id"`
-	Name string `json:"name"`
-}
-type ListGroupResp struct {
-	Action string  `json:"action"`
-	Groups []Group `json:"groups"`
-}
-type GroupChat struct {
-	Action  string `json:"action"`
-	ID      string `json:"group_id"`
-	Message string `json:"msg"`
-}
-
-type RecvGroupChat struct {
-	Action  string `json:"action"`
-	ID      string `json:"group_id"`
-	Message string `json:"msg"`
+	Status string `json:"status"`
 }

@@ -2,10 +2,13 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/websocket"
@@ -28,6 +31,10 @@ const (
 
 	ID_MESSAGE      = "message"
 	ID_RECV_MESSAGE = "recv_message"
+
+	ID_SET_INFO = "set_info"
+
+	ID_UPDATE_CARDINFO = "upload_cardinfo"
 )
 
 const (
@@ -48,7 +55,31 @@ func (this *Server) InitServer() {
 
 	this.handlers[ID_UPDATE_LOC] = this.updateLoc
 
+	this.handlers[ID_UPDATE_CARDINFO] = this.updateCardInfo
+
+	//
 	this.initMongo(DB_IP, DB_PORT, DB_NAME, DB_USER, DB_PWD)
+}
+
+func (this *Server) updateCardInfo(req []byte, data interface{}) (interface{}, error) {
+	cmd := &UploadCardInfo{}
+	json.Unmarshal(req, cmd)
+
+	username := data.(string)
+	img, _ := base64.StdEncoding.DecodeString(cmd.Img)
+
+	user := &DBUser{}
+	err := this.GetUser(username, user)
+	if err != nil {
+		log.Printf("err %v\n", err)
+	}
+	user.Skill = cmd.Skill
+	user.Img.Data = img
+	this.UpdateUser(user)
+
+	resp := &UploadCardInfoResp{Action: cmd.Action, Status: STATUS_OK}
+
+	return resp, nil
 }
 
 func (this *Server) nearbyList(req []byte, data interface{}) (interface{}, error) {
@@ -72,15 +103,19 @@ func (this *Server) nearbyList(req []byte, data interface{}) (interface{}, error
 		if err != nil {
 			log.Printf("err %v\n", err)
 		}
-		user.Loc.Lat = cmd.Lat
-		user.Loc.Lng = cmd.Lng
+
+		mLat, _ := strconv.ParseFloat((fmt.Sprintf("%.2f", cmd.Lat)), 64)
+		mLng, _ := strconv.ParseFloat((fmt.Sprintf("%.2f", cmd.Lng)), 64)
+		user.Loc.Lat = mLat
+		user.Loc.Lng = mLng
+		log.Printf("%v %v\n", mLat, mLng)
 		err = this.UpdateUser(user)
 		if err != nil {
 			log.Printf("err %v\n", err)
 		}
 	}()
 
-	resp := &NearbyListResp{Action: ID_NEARBY_LIST_RESP}
+	resp := &NearbyListResp{Action: ID_NEARBY_LIST_RESP, Status: STATUS_OK}
 	resp.List = make([]Stranger, 0)
 	for _, v := range users {
 
@@ -96,6 +131,14 @@ func (this *Server) nearbyList(req []byte, data interface{}) (interface{}, error
 
 		user.Distance = dist
 		resp.List = append(resp.List, user)
+	}
+
+	//test data
+	for i := 0; i < 7; i++ {
+		user1 := Stranger{}
+		user1.Nickname = fmt.Sprintf("%v_%v", "jack", i)
+		user1.Distance = 1
+		resp.List = append(resp.List, user1)
 	}
 
 	return resp, nil
@@ -121,7 +164,7 @@ func (this *Server) updateLoc(req []byte, data interface{}) (interface{}, error)
 		log.Printf("err %v\n", err)
 	}
 
-	return EMPTY_RESP, nil
+	return nil, nil
 }
 
 func (this *Server) register(req []byte, data interface{}) (interface{}, error) {

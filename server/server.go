@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
@@ -124,7 +125,7 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 		cmd := &GeneralCmd{}
 		err = json.Unmarshal(req, cmd)
 		if err != nil {
-			log.Printf("err %v\n", err)
+			log.Printf("err %v data:%v\n", err, string(req))
 			return
 		}
 
@@ -178,9 +179,10 @@ func (this *Server) clientGo(conn *websocket.Conn) {
 				username = cmd.Username
 			}
 
-			log.Printf("resp: %v\n", string(jsonResp))
-			conn.WriteMessage(websocket.TextMessage, jsonResp)
+			log.Printf("resp: --%v--\n", string(jsonResp))
+			if strings.TrimSpace(string(jsonResp)) != "" {
+				conn.WriteMessage(websocket.TextMessage, jsonResp)
+			}
 		}
-
 	}
 }

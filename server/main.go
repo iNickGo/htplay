@@ -48,7 +48,6 @@ var upgrader = websocket.Upgrader{
 }
 
 func entry(resp http.ResponseWriter, req *http.Request) {
-	log.Println("new client...")
 	var err error
 	var clientConn *websocket.Conn
 	clientConn, err = upgrader.Upgrade(resp, req, nil)
